@@ -71,12 +71,6 @@ export default class Modal extends Component{
     return this._transitionType;
   }
 
-  componentDidMount(){
-  }
-
-  componentWillUnmount(){
-  }
-
   _onLayoutModalContainer({nativeEvent:{layout:{width,height}}}){
     if( this.state.wrapperWidth == width && this.state.wrapperHeight == height ) return;
 
@@ -156,7 +150,7 @@ export default class Modal extends Component{
 
   render(){
     let {width, height, wrapperWidth, wrapperHeight} = this.state;
-    let {navigationControllerProps, NavigationController} = this.props;
+    let {scenesProps, Scenes} = this.props;
     let transform = this._calculateTransformForTranstion();
     let opacity = this._dimmingAnimation;
 
@@ -173,8 +167,8 @@ export default class Modal extends Component{
         <Animated.View style={[styles.dimming, {opacity}]} />
         <Animated.View style={[styles.modal, transform]}>
           <View style={{width, height, alignSelf:'center', overflow:'hidden'}}>
-            <NavigationController
-              {...navigationControllerProps}
+            <Scenes
+              {...scenesProps}
               hideModal={this.hideAnimation.bind(this)}
             />
           </View>

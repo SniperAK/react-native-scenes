@@ -55,16 +55,9 @@ export default class Bar extends Component {
   constructor(props){
     super(props);
     this.state = {
-      contentRef:props.contentRef,
       leftWidth:0,
       rightWidth:0,
     }
-  }
-
-  componentWillReceiveProps(newProps: Object) {
-    this.setState({
-      contentRef: newProps.contentRef,
-    });
   }
 
   _renderTitle(){
@@ -96,7 +89,7 @@ export default class Bar extends Component {
     let {
       leftItem : LeftItem,
       index,
-      navigationProps,
+      sceneProps,
       defaultBackButton,
     } = this.props;
 
@@ -104,7 +97,7 @@ export default class Bar extends Component {
 
     switch (typeof LeftItem) {
       case 'function': {
-        return ( <LeftItem style={[styles.corner]} {...navigationProps} /> );
+        return ( <LeftItem style={[styles.corner]} {...sceneProps} /> );
       } break;
       case 'object':{
         if( !LeftItem ) return null;
@@ -112,14 +105,14 @@ export default class Bar extends Component {
           if( LeftItem.filter(e=>e).length > 0 ) {
             return (
               <View style={{flexDirection:'row'}}>
-                { LeftItem.filter(item=>item).map( (item,index)=>Object.assign({},item,{key:'leftItem_' + index, ...navigationProps}))}
+                { LeftItem.filter(item=>item).map( (item,index)=>Object.assign({},item,{key:'leftItem_' + index, ...sceneProps}))}
               </View>
             );
           }
           else return null;
         }
         else {
-          return Object.assign( {}, LeftItem, navigationProps );
+          return Object.assign( {}, LeftItem, sceneProps );
         }
       } break;
     }
@@ -128,12 +121,12 @@ export default class Bar extends Component {
   _renderRightItem(){
     let {
       rightItem : RightItem,
-      navigationProps,
+      sceneProps,
     } = this.props;
 
     switch (typeof RightItem) {
       case 'function': {
-        return ( <RightItem style={[styles.corner]} {...navigationProps} /> );
+        return ( <RightItem style={[styles.corner]} {...sceneProps} /> );
       } break;
       case 'object':{
         if( !RightItem ) return null;
@@ -141,14 +134,14 @@ export default class Bar extends Component {
           if( RightItem.filter(e=>e).length > 0 ) {
             return (
               <View style={{flexDirection:'row'}}>
-                { RightItem.filter(item=>item).map( (item,index)=>Object.assign({},item,{key:'rightItem_' + index, ...navigationProps}))}
+                { RightItem.filter(item=>item).map( (item,index)=>Object.assign({},item,{key:'rightItem_' + index, ...sceneProps}))}
               </View>
             );
           }
           return null;
         }
         else {
-          return Object.assign( {}, RightItem, navigationProps );
+          return Object.assign( {}, RightItem, sceneProps );
         }
       } break;
     }

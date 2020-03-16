@@ -51,27 +51,21 @@ class Main extends Reat.Component {
 ```
 
 ## Scene Properties
-- [react-native-scenes](#react-native-scenes)
-  - [Supported OS](#supported-os)
-  - [Installation](#installation)
-  - [How to use](#how-to-use)
-    - [Basic Use](#basic-use)
-  - [Scene Properties](#scene-properties)
-    - [pop](#pop)
-    - [push](#push)
-    - [popToTop](#poptotop)
-    - [popTo](#popto)
-    - [setBarStyle](#setbarstyle)
-    - [setBarOverlay](#setbaroverlay)
-    - [setTitle](#settitle)
-    - [setTitleStyle](#settitlestyle)
-    - [setLeftItem](#setleftitem)
-    - [setRightItem](#setrightitem)
-  - [Static Method](#static-method)
-  - [Scene](#scene)
+  - [pop](#pop)
+  - [push](#push)
+  - [popToTop](#poptotop)
+  - [popTo](#popto)
+  - [setBarStyle](#setbarstyle)
+  - [setBarOverlay](#setbaroverlay)
+  - [setTitle](#settitle)
+  - [setTitleStyle](#settitlestyle)
+  - [setLeftItem](#setleftitem)
+  - [setRightItem](#setrightitem)
 
 
 ### pop
+  pop from current stack
+  
   ```
   this.props.pop
   ```

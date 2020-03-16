@@ -58,7 +58,7 @@ class BarButton extends Component {
     return (
       <Container 
         style={[styles.container, style]} 
-        onPress={this._onPress.ubind(this,300)}
+        onPress={this._onPress.bind(this)}
         {...etcProps}
       >
         {content}

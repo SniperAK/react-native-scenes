@@ -6,8 +6,8 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
+  Image,
   Easing,
-  Animated,
   StatusBar,
   StyleSheet,
 } from 'react-native';
@@ -15,8 +15,9 @@ import {
 import Bar from './Bar';
 
 import {
+  BarShadow,
+  TransitionType, 
   AnimationDuration,
-  TransitionType
 } from './common';
 
 const styles = StyleSheet.create({
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class RouteContainer extends Component {
+export default class SceneContainer extends Component {
   constructor( props ){
     super( props );
     let {route} = props;
@@ -103,7 +104,7 @@ export default class RouteContainer extends Component {
       setBarStyle   : (barStyle)      =>this.setState({barStyle}),
       setBarOverlay : (barOverlay)    =>this.setState({barOverlay}),
       setBarHidden  : (barHidden)     =>this.setState({barHidden}),
-      setBarShadow  : (barShadow)    =>this.setState({barShadow}),
+      setBarShadow  : (barShadow)     =>this.setState({barShadow}),
       barHidden,
       barShadow,
       ...routing,

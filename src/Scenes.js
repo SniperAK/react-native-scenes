@@ -42,6 +42,7 @@ export default class Scenes extends Component {
   }
   static _modalSeed = 0;
   static _modalIds = [];
+  static _modals = [];
 
   static _barStyle = null;
   static _barTitleStyle = null;
@@ -95,7 +96,7 @@ export default class Scenes extends Component {
     let absolute = Absolute.add(
       <Modal 
         {...etc}
-        navigationControllerProps={{
+        scenesProps={{
           style,
           route,
           modalId,
@@ -107,15 +108,23 @@ export default class Scenes extends Component {
           absolute.destroy();
           let modalIndex = this._modalIds.findIndex(id=>id == modalId);
           if(modalIndex > -1) this._modalIds.splice(modalIndex, 1);
+
+          delete this._modals[modalId];
         }}
       />
       ,this._modalIds.length + 1
     )
+    this._modals[modalId] = absolute;
   }
 
   static hideAllModal(){
-    this._modalIds.forEach(absoluteRef=>absoluteRef.destroy())
+    this._modalIds.forEach(absoluteRef=>{
+      this._modals[absoluteRef].destroy()
+    });
+    this._modalIds = [];
+    this._modals = {};
   }
+
 
   constructor( props ){
     super( props );
@@ -135,12 +144,6 @@ export default class Scenes extends Component {
 
   get transitionType(){
     return this.props.transitionType;
-  }
-
-  componentDidMount(){
-  }
-
-  componentWillUnmount(){
   }
 
   setStateAsync( state ){
