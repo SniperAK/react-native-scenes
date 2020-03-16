@@ -328,8 +328,8 @@ export default class Scenes extends Component {
       popTo:this.popTo,
       popToTop:this.popToTop,
       hideModal:this.props.hideModal && this.hideModal,
-      barStyle:this.constructor._barStyle,
-      barTitleStyle:this.constructor._barTitleStyle,
+      barStyle   : [this.constructor._barStyle,   this.props.barStyle  ].flat(),
+      titleStyle : [this.constructor._titleStyle, this.props.titleStyle].flat(),
     };
 
     return (
