@@ -67,7 +67,7 @@ export default class SceneContainer extends Component {
       || nextState.rightItem  != this.state.rightItem   
       || nextState.barOverlay != this.state.barOverlay  
       || nextState.barHidden  != this.state.barHidden   
-      || nextState.barHidden  != this.state.barHidden
+      || nextState.barShadow  != this.state.barShadow
     );
   }
 
@@ -116,7 +116,7 @@ export default class SceneContainer extends Component {
           <View style={[styles.barContainer]}>
             <Bar
               title={title}
-              titleStyle={[routing.barTitleStyle, titleStyle]}
+              titleStyle={[routing.titleStyle, titleStyle]}
               leftItem={leftItem || ( !routing.isRoot && routing.backButton )}
               rightItem={rightItem}
               barStyle={[routing.barStyle, barStyle]}

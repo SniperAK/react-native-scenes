@@ -14,8 +14,6 @@ GLOBAL.NotchDevice     = Platform.OS == 'ios' ? height == 812 || height == 896 |
 GLOBAL.StatusBarHeight = Platform.OS == 'ios' ? NotchDevice ? 35 : 20 : 0; // StatusBar.currentHeight;
 GLOBAL.BarHeight       = 56 + StatusBarHeight || 0;
 
-console.log( {StatusBarHeight, BarHeight} )
-
 const styles = StyleSheet.create({
   bar: {
     height: 56 + StatusBarHeight || 0,

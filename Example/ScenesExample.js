@@ -30,7 +30,6 @@ export default class ScenesExample extends Component {
   }
   constructor( props ){
     super( props ); 
-    // console.log( this );
     this.state = {
       showTreeView:false,
     }

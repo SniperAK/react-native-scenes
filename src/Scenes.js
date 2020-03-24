@@ -45,13 +45,13 @@ export default class Scenes extends Component {
   static _modals = [];
 
   static _barStyle = null;
-  static _barTitleStyle = null;
+  static _titleStyle = null;
 
   static setGlobalBarStyle( barStyle ){
     this._barStyle = barStyle;
   } 
-  static setGlobalBarTitleStyle( barTitleStyle ){
-    this._barTitleStyle = barTitleStyle; 
+  static setGlobalTitleStyle( titleStyle ){
+    this._titleStyle = titleStyle; 
   }
 
   static showModal( options = {}){
@@ -169,8 +169,6 @@ export default class Scenes extends Component {
   push = ( route )=>{
     if( this._nowTransition ) return;
     this._nowTransition = true; 
-
-    console.log( 'push' );
 
     return this.setStateAsync(({routes})=>{
       routes.push( route );
