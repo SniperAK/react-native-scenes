@@ -9,6 +9,7 @@ import {
   Easing,
   Animated,
   StyleSheet,
+  BackHandler,
 } from 'react-native';
 
 import {
