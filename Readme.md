@@ -4,6 +4,11 @@
 
 > react-native-scenes makes dynamic routing each scehe.
 
+# Version History
+
+- 0.2.0 Add BackHandler Event on Modal and SceneContainer
+- 0.1.5 Add setGlobalBarShadow(boolean) to control bar shadow appearence.
+
 ## Supported OS
 
 - iOS
@@ -38,7 +43,7 @@ export default class EntryPoint extends React.Component {
 ```
 > Dynamically and programmatically route to another sceen
 ```
-class Main extends Reat.Component {
+class Main extends React.Component {
   _onPressSomeEvent(){
     this.props.push({
       component:SecondScene,
@@ -50,7 +55,7 @@ class Main extends Reat.Component {
 }
 ```
 
-## Scene Properties
+## Scene Component Properties
   - [pop](#pop)
   - [push](#push)
   - [popToTop](#poptotop)
@@ -62,52 +67,129 @@ class Main extends Reat.Component {
   - [setLeftItem](#setleftitem)
   - [setRightItem](#setrightitem)
 
-
 ### pop
-  pop from current stack
+  > Pop current scene from current scene stack
   
   ```
-  this.props.pop
+  this.props.pop(void);
   ```
 ### push
+ > Push new component to current stack
   ```
-  this.props.push
+  this.props.push( Route )
   ```
 ### popToTop
+ > clear all scene stack with out main route scene.
   ```
-  this.props.popToTop
+  this.props.popToTop( void )
   ```
 ### popTo
-```
-this.props.popTo
-```
+ > pop to specific index to current scene stack
+  ```
+  this.props.popTo( index )
+  ```
 ### setBarStyle
-```
-this.props.setBarStyle
-```
+ > customization bar style
+  ```
+  this.props.setBarStyle
+  ```
 ### setBarOverlay
-```
-this.props.setBarOverlay
-```
+  ```
+  this.props.setBarOverlay
+  ```
 ### setTitle
-```
-this.props.setTitle
-```
+  ```
+  this.props.setTitle
+  ```
 ### setTitleStyle
-```
-this.props.setTitleStyle
-```
+  ```
+  this.props.setTitleStyle
+  ```
 ### setLeftItem
-```
-this.props.setLeftItem
-```
+  ```
+  this.props.setLeftItem
+  ```
 ### setRightItem
-```
-this.props.setRightItem()
-```
+  ```
+  this.props.setRightItem()
+  ```
+## Route
+### Route options
+  - title
+  - titleStyle
+  - barHidden
+  - barStyle
+  - barShadow
+  - leftItem
+  - rightItem
+  - avoidBackHandler
 
 ## Static Method 
-- 
 
-## Scene 
+- static setGlobalBarStyle(View Style StyleSheet)
+- static setGlobalBarShadow(Boolean)
+- static setGlobalTitleStyle(Text Style StyleSheet)
 
+## Scene
+### props 
+- transitionType
+  - Configure appearence method 
+  - (default)TransitionType.Slide
+  - TransitionType.None
+  - TransitionType.Fade,
+- backButton
+  - Default left item for back ( pop ) button
+  - default : BarButtonBack
+- animationDuration (default : 500)
+- style
+
+### methods 
+- push
+- pop
+- popTo
+- popToTop
+- hideModal
+
+## Modal
+options 
+  ...Route options
+  ...Scene props
+  animationDuration,
+  closeButton=BarButtonClose,
+    
+```
+Modal.show()
+```
+
+
+# BackHandler event ( v0.2.0 )
+- The avoidBackHandler rounter options can determine BackHandler work or not work. But you should make sure implement BackHandler event as you want. See react-native BackHandler event sample [BackHandler](https://reactnative.dev/docs/backhandler)
+
+
+```
+this.props.push({
+  component:SomeScene,
+  avoidBackHandler:true,
+})
+
+// ... 
+
+class SomeScene extend Component{
+  componentDidMount(){
+    this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', ()=>{
+      Popup.show({
+        message:'Are you sure?',
+        buttons:['Ok','Cance'],
+      })
+      .then(({answer})=>{
+        if( answer == 0 ) this.props.pop();
+      })
+      return true;
+    })
+  }
+
+  componentWillUnmount(){
+    this._backHandlerSubscription.remove();
+  }
+}
+```

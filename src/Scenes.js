@@ -69,7 +69,7 @@ export default class Scenes extends Component {
       barStyle,
       leftItem,
       rightItem,
-      avoidBack,
+      avoidBackHandler,
 
       style,
       component,
@@ -88,7 +88,7 @@ export default class Scenes extends Component {
       barHidden,
       barStyle,
       rightItem,
-      avoidBack,
+      avoidBackHandler,
       
       component, 
       passProps,
@@ -106,6 +106,7 @@ export default class Scenes extends Component {
           modalId,
           transitionType,
         }}
+        avoidBackHandler={avoidBackHandler}
         Scenes={this}
         transitionType={modalTransitionType || transitionType}
         onFinishHide={()=>{

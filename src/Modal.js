@@ -61,7 +61,25 @@ export default class Modal extends Component{
     }
     this._modalAnimation   = new Animated.Value(0);
     this._dimmingAnimation = new Animated.Value(this._dimming ? 0 : 1);
+  
+    this._backAction = this._backAction.bind(this)
   }
+
+  componentDidMount(){
+    if( !this.props.avoidBackHandler ) {
+      this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', this._backAction );
+    }
+  }
+
+  componentWillUnmount(){
+    if( this._backHandlerSubscription ) this._backHandlerSubscription.remove();
+  }
+
+  _backAction(){
+    this.hideAnimation();
+    return true;
+  }
+  
 
   get animationDuration(){
     return this.props.animationDuration;

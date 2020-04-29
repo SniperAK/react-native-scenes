@@ -58,7 +58,23 @@ export default class SceneContainer extends Component {
       barShadow   : route.component.barShadow || props.barShadow,
     };
 
-    // this._backAction = this._backAction.bind(this)
+    this._backAction = this._backAction.bind(this)
+  }
+
+  componentDidMount(){
+    if( !this.avoidBackHandler && this.props.index > 0 ) {
+      this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', this._backAction );
+      console.log( this._backHandlerSubscription );
+    }
+  }
+
+  componentWillUnmount(){
+    if( this._backHandlerSubscription ) this._backHandlerSubscription.remove();
+  }
+
+  _backAction(){
+    this.props.pop();
+    return true;
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -75,7 +91,7 @@ export default class SceneContainer extends Component {
   }
 
   get route(){ return this.props.route; }
-  get avoidBack()  { return this.route.avoidBack  || this.route.component.avoidBack   || null  }
+  get avoidBackHandler()  { return this.route.avoidBackHandler  || this.route.component.avoidBackHandler   || null  }
   
   render(){
     let {
