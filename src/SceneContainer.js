@@ -10,6 +10,7 @@ import {
   Easing,
   StatusBar,
   StyleSheet,
+  BackHandler,
 } from 'react-native';
 
 import Bar from './Bar';
@@ -54,8 +55,10 @@ export default class SceneContainer extends Component {
       rightItem   : route.rightItem  || route.component.rightItem   || null,
       barOverlay  : null,
       barHidden   : route.barHidden  || route.component.barHidden   || false,
-      barShadow   : route.barShadow  || route.component.barShadow   || true,
-    }
+      barShadow   : route.component.barShadow || props.barShadow,
+    };
+
+    // this._backAction = this._backAction.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){

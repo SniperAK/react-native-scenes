@@ -45,10 +45,14 @@ export default class Scenes extends Component {
   static _modals = [];
 
   static _barStyle = null;
+  static _barShadow = true;
   static _titleStyle = null;
 
   static setGlobalBarStyle( barStyle ){
     this._barStyle = barStyle;
+  } 
+  static setGlobalBarShadow( barShadow ){
+    this._barShadow = barShadow;
   } 
   static setGlobalTitleStyle( titleStyle ){
     this._titleStyle = titleStyle; 
@@ -161,6 +165,7 @@ export default class Scenes extends Component {
         toValue:1,
         duration:this.animationDuration,
         easing:Easing.easeInOut,
+        useNativeDriver:true,
       }
     ).start( r )); 
   }
@@ -327,6 +332,7 @@ export default class Scenes extends Component {
       popToTop:this.popToTop,
       hideModal:this.props.hideModal && this.hideModal,
       barStyle   : [this.constructor._barStyle,   this.props.barStyle  ].flat(),
+      barShadow  : this.constructor._barShadow || this.props.barShadow,
       titleStyle : [this.constructor._titleStyle, this.props.titleStyle].flat(),
     };
 
