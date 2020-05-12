@@ -2,10 +2,11 @@
 
 > Pure Javascript to standalone scene statck control in React Native like react-navigation or navigator.
 
-> react-native-scenes makes dynamic routing each scehe.
+> react-native-scenes makes dynamic routing each scene.
 
 # Version History
 
+- 0.3.0 Add Route Change event props on each Component and Scenes owner
 - 0.2.0 Add BackHandler Event on Modal and SceneContainer
 - 0.1.5 Add setGlobalBarShadow(boolean) to control bar shadow appearence.
 
@@ -142,6 +143,9 @@ class Main extends React.Component {
   - default : BarButtonBack
 - animationDuration (default : 500)
 - style
+- routeWillChange( toIndex : Number )
+- routeDidChange( toIndex : Number )
+
 
 ### methods 
 - push

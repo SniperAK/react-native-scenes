@@ -46,7 +46,9 @@ export default class SceneContainer extends Component {
   constructor( props ){
     super( props );
     let {route} = props;
-
+    let barShadow = typeof route.barShadow == 'boolean' ? route.barShadow : 
+                    typeof route.component.barShadow == 'boolean' ? route.component.barShadow : 
+                    true;
     this.state = {
       barStyle    : route.barStyle   || route.component.barStyle    || null,
       title       : route.title      || route.component.title       || null,
@@ -55,7 +57,7 @@ export default class SceneContainer extends Component {
       rightItem   : route.rightItem  || route.component.rightItem   || null,
       barOverlay  : null,
       barHidden   : route.barHidden  || route.component.barHidden   || false,
-      barShadow   : route.component.barShadow || props.barShadow,
+      barShadow,
     };
 
     this._backAction = this._backAction.bind(this)
@@ -92,6 +94,52 @@ export default class SceneContainer extends Component {
 
   get route(){ return this.props.route; }
   get avoidBackHandler()  { return this.route.avoidBackHandler  || this.route.component.avoidBackHandler   || null  }
+
+  routeWillChange( toIndex, currentIndex ) {
+    
+    let {index} = this.props;
+    // console.log( {index, toIndex, currentIndex});
+
+    if( currentIndex == index && toIndex != index ) {
+      if( this._componentRef && this._componentRef.routeWillDisappear && typeof this._componentRef.routeWillDisappear === 'function') {
+        this._componentRef.routeWillDisappear(toIndex);
+      }
+      else {
+        console.log( `routeWillDisappear[${index}]`, toIndex );
+      }
+    }
+    else if( (toIndex == index && currentIndex != index ) ) {
+      if( this._componentRef && this._componentRef.routeWillAppear && typeof this._componentRef.routeWillAppear === 'function') {
+        this._componentRef.routeWillAppear(toIndex);
+      }
+      else {
+        console.log( `routeWillAppear[${index}]`, toIndex );
+      }
+    }
+  }
+
+  routeDidChange( currentIndex, beforeIndex ) {
+    let {index} = this.props;
+    
+    console.log( {index, currentIndex, beforeIndex});
+    // routeDidDisappear can't call when route popping cause ref already unmount should using componentWillUmnoumt instead.
+    if( beforeIndex == index && currentIndex != index ) {
+      if( this._componentRef && this._componentRef.routeDidDisppear && typeof this._componentRef.routeDidDisppear === 'function') {
+        this._componentRef.routeDidDisppear(currentIndex);
+      }
+      else {
+        console.log( `routeDidDisppear[${index}]`, currentIndex );
+      }
+    }
+    if( currentIndex == index && beforeIndex != index ) {
+      if( this._componentRef && this._componentRef.routeDidAppear && typeof this._componentRef.routeDidAppear === 'function') {
+        this._componentRef.routeDidAppear(currentIndex);
+      }
+      else {
+        console.log( `routeDidAppear[${index}]`, currentIndex );
+      }
+    }
+  }
   
   render(){
     let {
@@ -100,7 +148,7 @@ export default class SceneContainer extends Component {
     } = this.props;
 
     let {
-      component:Component,
+      component:Content,
       passProps
     } = route;
 
@@ -149,7 +197,8 @@ export default class SceneContainer extends Component {
           {!barHidden && barShadow && (
             <Image source={BarShadow} style={styles.barShadow} resizeMode='stretch' />
           )}
-          <Component 
+          <Content 
+            ref={r=>this._componentRef = r}
             sceneProps={sceneProps}
             {...sceneProps}
             {...passProps}

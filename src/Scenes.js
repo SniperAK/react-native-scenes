@@ -140,6 +140,8 @@ export default class Scenes extends Component {
       transition: null,
     };
 
+    this._routeRefs = {};
+
     this._animation = new Animated.Value(1);
   }
 
@@ -171,6 +173,20 @@ export default class Scenes extends Component {
     ).start( r )); 
   }
 
+  _routeWillChange( toIndex, currentIndex ){
+    Object.values( this._routeRefs ).forEach(ref=>{
+      ref.routeWillChange( toIndex, currentIndex );
+    });
+    this.props.routeWillChange && this.props.routeWillChange( toIndex, currentIndex );
+  }
+
+  _routeDidChange( currentIndex, beforeIndex ){
+    Object.values( this._routeRefs ).forEach(ref=>{
+      ref.routeDidChange( currentIndex, beforeIndex );
+    });
+    this.props.routeDidChange && this.props.routeDidChange( currentIndex, beforeIndex );
+  }
+
   // route control 
   push = ( route )=>{
     if( this._nowTransition ) return;
@@ -186,11 +202,13 @@ export default class Scenes extends Component {
         }
       };
     })
+    .then(()=>this._routeWillChange( this.state.routes.length - 1, this.state.routes.length - 2 ))
     .then(()=>this._animateTranstion())
     .then(()=>{
       this._nowTransition = false; 
       return this.setStateAsync({ transition: null })
     })
+    .then(()=>this._routeDidChange( this.state.routes.length - 1, this.state.routes.length - 2 ));
   }
 
   pop = ()=>{
@@ -208,6 +226,7 @@ export default class Scenes extends Component {
         }
       };
     })
+    .then(()=>this._routeWillChange(this.state.routes.length + 1, this.state.routes.length))
     .then(()=>this._animateTranstion())
     .then(()=>{
       return this.setStateAsync(({routes})=>{
@@ -219,11 +238,13 @@ export default class Scenes extends Component {
       })
     })
     .then(()=>this._nowTransition = false)
+    .then(()=>this._routeDidChange(this.state.routes.length, this.state.routes.length + 1));
   }
 
   popTo = ( index )=>{
-    if( this.state.routes.length == 1 ) return {};
-    if( index > this.state.routes.length - 2) return {};
+    let currentIndex = this.state.routes.length - 1;
+    if( currentIndex ==  0) return {};
+    if( index > currentIndex - 1) return {};
 
     if( this._nowTransition ) return;
     this._nowTransition = true; 
@@ -237,17 +258,19 @@ export default class Scenes extends Component {
         }
       };
     })
+    .then(()=>this._routeWillChange(index, currentIndex))
     .then(()=>this._animateTranstion())
     .then(()=>{
       return this.setStateAsync(({routes})=>{
-        routes.splice(  (index + 1), routes.length - (index + 1) );
+        routes.splice( (index + 1), routes.length - (index + 1) );
         return {
           routes,
           transition:null,
         };
       })
     })
-    .then(()=>this._nowTransition = false);
+    .then(()=>this._nowTransition = false)
+    .then(()=>this._routeDidChange(index, currentIndex));
   }
 
   popToTop = ()=>{
@@ -321,6 +344,10 @@ export default class Scenes extends Component {
     let _transform = this._calculateTransformForTranstion( index, routes );
     let { modalId, backButton } = this.props;
 
+    let barShadow = typeof this.props.barShadow == 'boolean' ? this.props.barShadow : 
+                    typeof this.constructor._barShadow == 'boolean' ? this.constructor._barShadow : 
+                    true; 
+                    
     let routing = {
       isRoot:index == 0,
       route,
@@ -333,7 +360,7 @@ export default class Scenes extends Component {
       popToTop:this.popToTop,
       hideModal:this.props.hideModal && this.hideModal,
       barStyle   : [this.constructor._barStyle,   this.props.barStyle  ].flat(),
-      barShadow  : this.constructor._barShadow || this.props.barShadow,
+      barShadow,
       titleStyle : [this.constructor._titleStyle, this.props.titleStyle].flat(),
     };
 
@@ -342,7 +369,14 @@ export default class Scenes extends Component {
         key={`navigation-route-${index}`}
         style={[styles.routeContainerWrapper, {zIndex:index}, _transform]} 
       >
-        <SceneContainer {...routing} routing={routing}/>
+        <SceneContainer 
+          {...routing} 
+          routing={routing}
+          ref={r=>{
+            if( r ) this._routeRefs[index]=r;
+            else delete this._routeRefs[index];
+          }}
+        />
       </Animated.View>
     )
   }
