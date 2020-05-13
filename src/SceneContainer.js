@@ -10,6 +10,7 @@ import {
   Easing,
   StatusBar,
   StyleSheet,
+  Dimensions,
   BackHandler,
 } from 'react-native';
 
@@ -40,7 +41,9 @@ const styles = StyleSheet.create({
     height:15,
     zIndex:1,
   },
-})
+});
+
+const CallRefNotExists = {CallRefNotExists:true};
 
 export default class SceneContainer extends Component {
   constructor( props ){
@@ -60,28 +63,70 @@ export default class SceneContainer extends Component {
       barShadow,
     };
 
-    this._backAction = this._backAction.bind(this)
+    this._onReceiveBackPress = this._onReceiveBackPress.bind(this);
+    this._onChangeDimensions = this._onChangeDimensions.bind(this);
+  }
+
+  get route(){ 
+    return this.props.route; 
+  }
+
+  get avoidBackHandler() { 
+    return typeof this.route.avoidBackHandler === 'boolean' ? this.route.avoidBackHandler :
+           typeof this.route.component.avoidBackHandler === 'boolean' ? this.route.component.avoidBackHandler : 
+           false;
+  }
+
+  _componentRefCall( action, ...params ){
+    if( this._componentRef && this._componentRef[action] && typeof this._componentRef[action] === 'function' ){
+      return this._componentRef[action]( ...params);
+    }
+    else return CallRefNotExists;
+    // if( !target ) console.warn( '_componentRefCall target not exists');
+    // else if( !target[action] ) console.warn(`_componentRefCall target.${action} not exists`);
+    // else if( typeof target[action] !== 'function' ) console.warn(`_componentRefCall target.${action} is not function`);
   }
 
   componentDidMount(){
     if( !this.avoidBackHandler && this.props.index > 0 ) {
-      this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', this._backAction );
-      console.log( this._backHandlerSubscription );
+      this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', this._onReceiveBackPress );
     }
+
+    Dimensions.addEventListener('change', this._onChangeDimensions );
+    this._componentRefCall( 'routeWillAppear', this.props.index );
   }
 
   componentWillUnmount(){
     if( this._backHandlerSubscription ) this._backHandlerSubscription.remove();
+    
+    Dimensions.removeEventListener('change', this._onChangeDimensions );
+    this._componentRefCall( 'routeDidDisappear', this.props.index );
   }
 
-  _backAction(){
-    this.props.pop();
-    return true;
+  _onReceiveBackPress(){
+    let res = this._componentRefCall( 'onBackPress' );
+    if( res  === CallRefNotExists ) {
+      this.props.pop();
+      return true;
+    }
+    else return res;
+  }
+
+  _onChangeDimensions(event){
+    // console.log( 'SceneContainer receive dimensions change event', event);
+    this._shouldUpdate = true;
+
+    this._componentRefCall( 'routeWillChangeDimensions', event );
+    this.setState({},()=>{
+      this._shouldUpdate = false;
+      this._componentRefCall( 'routeDidChangeDimensions', event );
+    })
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return (
-         nextState.barStyle   != this.state.barStyle    
+      this._shouldUpdate 
+      || nextState.barStyle   != this.state.barStyle    
       || nextState.title      != this.state.title       
       || nextState.titleStyle != this.state.titleStyle  
       || nextState.leftItem   != this.state.leftItem    
@@ -92,52 +137,25 @@ export default class SceneContainer extends Component {
     );
   }
 
-  get route(){ return this.props.route; }
-  get avoidBackHandler()  { return this.route.avoidBackHandler  || this.route.component.avoidBackHandler   || null  }
-
   routeWillChange( toIndex, currentIndex ) {
-    
     let {index} = this.props;
-    // console.log( {index, toIndex, currentIndex});
 
     if( currentIndex == index && toIndex != index ) {
-      if( this._componentRef && this._componentRef.routeWillDisappear && typeof this._componentRef.routeWillDisappear === 'function') {
-        this._componentRef.routeWillDisappear(toIndex);
-      }
-      else {
-        console.log( `routeWillDisappear[${index}]`, toIndex );
-      }
+      this._componentRefCall( 'routeWillDisappear', toIndex);
     }
     else if( (toIndex == index && currentIndex != index ) ) {
-      if( this._componentRef && this._componentRef.routeWillAppear && typeof this._componentRef.routeWillAppear === 'function') {
-        this._componentRef.routeWillAppear(toIndex);
-      }
-      else {
-        console.log( `routeWillAppear[${index}]`, toIndex );
-      }
+      this._componentRefCall( 'routeWillAppear', toIndex)
     }
   }
 
   routeDidChange( currentIndex, beforeIndex ) {
     let {index} = this.props;
-    
-    console.log( {index, currentIndex, beforeIndex});
-    // routeDidDisappear can't call when route popping cause ref already unmount should using componentWillUmnoumt instead.
+
     if( beforeIndex == index && currentIndex != index ) {
-      if( this._componentRef && this._componentRef.routeDidDisppear && typeof this._componentRef.routeDidDisppear === 'function') {
-        this._componentRef.routeDidDisppear(currentIndex);
-      }
-      else {
-        console.log( `routeDidDisppear[${index}]`, currentIndex );
-      }
+      this._componentRefCall( 'routeDidDisappear', currentIndex)
     }
     if( currentIndex == index && beforeIndex != index ) {
-      if( this._componentRef && this._componentRef.routeDidAppear && typeof this._componentRef.routeDidAppear === 'function') {
-        this._componentRef.routeDidAppear(currentIndex);
-      }
-      else {
-        console.log( `routeDidAppear[${index}]`, currentIndex );
-      }
+      this._componentRefCall( 'routeDidAppear', currentIndex)
     }
   }
   

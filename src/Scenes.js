@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   container:{
     flex:1, 
     position:'relative',
+    overflow:'hidden',
   },
   routeContainerWrapper:{
     ...StyleSheet.absoluteFill,
@@ -66,6 +67,7 @@ export default class Scenes extends Component {
       title,
       titleStyle,
       barHidden,
+      barShadow,
       barStyle,
       leftItem,
       rightItem,
@@ -86,6 +88,7 @@ export default class Scenes extends Component {
       title,
       titleStyle,
       barHidden,
+      barShadow,
       barStyle,
       rightItem,
       avoidBackHandler,
@@ -105,6 +108,7 @@ export default class Scenes extends Component {
           route,
           modalId,
           transitionType,
+          barShadow,
         }}
         avoidBackHandler={avoidBackHandler}
         Scenes={this}
