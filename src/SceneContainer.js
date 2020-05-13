@@ -71,6 +71,10 @@ export default class SceneContainer extends Component {
     return this.props.route; 
   }
 
+  get index(){
+    return this.props.index;
+  }
+
   get avoidBackHandler() { 
     return typeof this.route.avoidBackHandler === 'boolean' ? this.route.avoidBackHandler :
            typeof this.route.component.avoidBackHandler === 'boolean' ? this.route.component.avoidBackHandler : 
@@ -92,35 +96,17 @@ export default class SceneContainer extends Component {
       this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', this._onReceiveBackPress );
     }
 
-    Dimensions.addEventListener('change', this._onChangeDimensions );
+    let {dimensionsChangeEventEmitter:dimensionsEmitter} = this.props;
+    dimensionsEmitter && dimensionsEmitter.addEventListener && dimensionsEmitter.addEventListener('change', this._onChangeDimensions );
     this._componentRefCall( 'routeWillAppear', this.props.index );
   }
 
   componentWillUnmount(){
     if( this._backHandlerSubscription ) this._backHandlerSubscription.remove();
     
-    Dimensions.removeEventListener('change', this._onChangeDimensions );
+    let {dimensionsChangeEventEmitter:dimensionsEmitter} = this.props;
+    dimensionsEmitter && dimensionsEmitter.removeEventListener && dimensionsEmitter.removeEventListener('change', this._onChangeDimensions );
     this._componentRefCall( 'routeDidDisappear', this.props.index );
-  }
-
-  _onReceiveBackPress(){
-    let res = this._componentRefCall( 'onBackPress' );
-    if( res  === CallRefNotExists ) {
-      this.props.pop();
-      return true;
-    }
-    else return res;
-  }
-
-  _onChangeDimensions(event){
-    // console.log( 'SceneContainer receive dimensions change event', event);
-    this._shouldUpdate = true;
-
-    this._componentRefCall( 'routeWillChangeDimensions', event );
-    this.setState({},()=>{
-      this._shouldUpdate = false;
-      this._componentRefCall( 'routeDidChangeDimensions', event );
-    })
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -137,25 +123,42 @@ export default class SceneContainer extends Component {
     );
   }
 
-  routeWillChange( toIndex, currentIndex ) {
-    let {index} = this.props;
-
-    if( currentIndex == index && toIndex != index ) {
-      this._componentRefCall( 'routeWillDisappear', toIndex);
+  _onReceiveBackPress(){
+    let res = this._componentRefCall( 'onBackPress' );
+    if( res  === CallRefNotExists ) {
+      this.props.pop();
+      return true;
     }
-    else if( (toIndex == index && currentIndex != index ) ) {
-      this._componentRefCall( 'routeWillAppear', toIndex)
+    else return res;
+  }
+
+  _onChangeDimensions(event){
+    console.log( 'SceneContainer receive dimensions change event', event);
+    this._shouldUpdate = true;
+
+    this._componentRefCall( 'routeWillChangeDimensions', event );
+    this.setState({},()=>{
+      this._shouldUpdate = false;
+      this._componentRefCall( 'routeDidChangeDimensions', event );
+    })
+  }
+
+
+  routeWillChange( toIndex, currentIndex ) {
+    if( currentIndex == this.index && toIndex != this.index ) {
+      this._componentRefCall( 'routeWillDisappear', toIndex );
+    }
+    else if( (toIndex == this.index && currentIndex != this.index ) ) {
+      this._componentRefCall( 'routeWillAppear', toIndex );
     }
   }
 
   routeDidChange( currentIndex, beforeIndex ) {
-    let {index} = this.props;
-
-    if( beforeIndex == index && currentIndex != index ) {
-      this._componentRefCall( 'routeDidDisappear', currentIndex)
+    if( beforeIndex == this.index && currentIndex != this.index ) {
+      this._componentRefCall( 'routeDidDisappear', currentIndex )
     }
-    if( currentIndex == index && beforeIndex != index ) {
-      this._componentRefCall( 'routeDidAppear', currentIndex)
+    if( currentIndex == this.index && beforeIndex != this.index ) {
+      this._componentRefCall( 'routeDidAppear', currentIndex )
     }
   }
   

@@ -5,6 +5,7 @@
 > react-native-scenes makes dynamic routing each scene.
 
 # Version History
+- 0.4.1 Improve Dimension change event can customization
 - 0.4.0 Add Dimensions Change receive event implementable
 - 0.3.0 Add Route Change event props on each Component and Scenes owner
 - 0.2.0 Add BackHandler Event on Modal and SceneContainer
@@ -247,3 +248,32 @@ class SomeScene extends Component {
 
 - routeWillChangeDimensions
 - routeDidChangeDimensions
+
+### Dimensions Change Event Customization
+> Sometimes each Scene Container dimension change event need to delay call after other funcitons. ex) change global naviation bar style for related dimensions but Each scenes not effected
+
+```
+  this._scenesDimensionEventListeners = new Map();
+
+  // hack : Eacn Scenes`s router update delay after dimensions change event cause global Navigation bar style has chagne need first;
+
+  // replace DimensionsChange Event emitter ( default is Dimensions`s event management methods )
+  Scenes.DimensionsChangeEventEmitter = {
+    addEventListener:(event, listener)=>{
+      // makes delay 50 ms
+      let listenerWrapper = ()=>setTimeout(listener, 50);
+      // add event listener to linstener wrapper
+      Dimensions.addEventListener( 'change', listenerWrapper );
+      // store using Map to relative listener with listenerWrapper;
+      this._scenesDimensionEventListeners.set( listener, listenerWrapper );
+    },
+    removeEventListener:(event, listener)=>{
+      // find listenerWrapper via listener
+      let listenerWrapper = this._scenesDimensionEventListeners.get(listener);
+      // remove event listener via listenerWrapper
+      Dimensions.removeEventListener( 'change', listenerWrapper );
+      // remove stored relation listener
+      this._scenesDimensionEventListeners.delete( listener );
+    },
+  };
+```

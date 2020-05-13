@@ -9,6 +9,7 @@ import {
   Easing,
   Animated,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 
 import Modal from './Modal';
@@ -33,6 +34,11 @@ const styles = StyleSheet.create({
   },
 });
 
+let _DimensionsChangeEventEmitter = {
+  addEventListener: Dimensions.addEventListener,
+  removeEventListener: Dimensions.removeEventListener,
+}
+
 export default class Scenes extends Component {
   static TransitionType = TransitionType;
   static defaultProps = {
@@ -41,6 +47,17 @@ export default class Scenes extends Component {
     animationDuration:AnimationDuration,
     style:{backgroundColor:'white'}
   }
+
+  static get DimensionsChangeEventEmitter(){
+    return _DimensionsChangeEventEmitter;
+  }
+
+  static set DimensionsChangeEventEmitter( emitter ){
+    _DimensionsChangeEventEmitter = emitter; 
+  }
+
+  static _scenesContainer = new Set();
+
   static _modalSeed = 0;
   static _modalIds = [];
   static _modals = [];
@@ -57,6 +74,17 @@ export default class Scenes extends Component {
   } 
   static setGlobalTitleStyle( titleStyle ){
     this._titleStyle = titleStyle; 
+  }
+
+  static updateScenes(){
+    this._scenesContainer.forEach(scenes=>{
+      Object.values(scenes._routeRefs).forEach(routeRef=>{
+        routeRef._shouldUpdate = true;
+        routeRef.setState({},()=>{
+          routeRef._shouldUpdate = false;
+        });
+      })
+    })
   }
 
   static showModal( options = {}){
@@ -147,6 +175,14 @@ export default class Scenes extends Component {
     this._routeRefs = {};
 
     this._animation = new Animated.Value(1);
+  }
+  
+  componentDidMount(){
+    this.constructor._scenesContainer.add( this );
+  }
+
+  componentWillUnmount(){
+    this.constructor._scenesContainer.delete( this );
   }
 
   get animationDuration(){
@@ -366,6 +402,7 @@ export default class Scenes extends Component {
       barStyle   : [this.constructor._barStyle,   this.props.barStyle  ].flat(),
       barShadow,
       titleStyle : [this.constructor._titleStyle, this.props.titleStyle].flat(),
+      dimensionsChangeEventEmitter:_DimensionsChangeEventEmitter,
     };
 
     return (
