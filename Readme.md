@@ -5,6 +5,7 @@
 > react-native-scenes makes dynamic routing each scene.
 
 # Version History
+- 0.4.2 Remove console.log when dimensions change event called
 - 0.4.1 Improve Dimension change event can customization
 - 0.4.0 Add Dimensions Change receive event implementable
 - 0.3.0 Add Route Change event props on each Component and Scenes owner

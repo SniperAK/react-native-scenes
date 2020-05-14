@@ -133,9 +133,7 @@ export default class SceneContainer extends Component {
   }
 
   _onChangeDimensions(event){
-    console.log( 'SceneContainer receive dimensions change event', event);
     this._shouldUpdate = true;
-
     this._componentRefCall( 'routeWillChangeDimensions', event );
     this.setState({},()=>{
       this._shouldUpdate = false;
