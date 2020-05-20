@@ -48,10 +48,10 @@ const CallRefNotExists = {CallRefNotExists:true};
 export default class SceneContainer extends Component {
   constructor( props ){
     super( props );
-    let {route} = props;
+    let {route, barShadow:barShadowGiven} = props;
     let barShadow = typeof route.barShadow == 'boolean' ? route.barShadow : 
                     typeof route.component.barShadow == 'boolean' ? route.component.barShadow : 
-                    true;
+                    barShadowGiven;
     this.state = {
       barStyle    : route.barStyle   || route.component.barStyle    || null,
       title       : route.title      || route.component.title       || null,
