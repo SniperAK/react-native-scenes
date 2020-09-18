@@ -173,7 +173,7 @@ export default class Scenes extends Component {
 
   // route control 
   push = ( route )=>{
-    if( this._nowTransition ) return;
+    if( this._nowTransition ) return Promise.resolve();
     this._nowTransition = true; 
 
     return this.setStateAsync(({routes})=>{
@@ -194,9 +194,9 @@ export default class Scenes extends Component {
   }
 
   pop = ()=>{
-    if( this.state.routes.length == 1 ) return;
+    if( this.state.routes.length == 1 ) return Promise.resolve();
 
-    if( this._nowTransition ) return;
+    if( this._nowTransition ) return Promise.resolve();
     this._nowTransition = true; 
 
     return this.setStateAsync(({routes})=>{
@@ -222,10 +222,10 @@ export default class Scenes extends Component {
   }
 
   popTo = ( index )=>{
-    if( this.state.routes.length == 1 ) return {};
-    if( index > this.state.routes.length - 2) return {};
+    if( this.state.routes.length == 1 ) return Promise.resolve({});
+    if( index > this.state.routes.length - 2) return Promise.resolve({});
 
-    if( this._nowTransition ) return;
+    if( this._nowTransition ) return Promise.resolve({});
     this._nowTransition = true; 
 
     return this.setStateAsync(({routes})=>{
