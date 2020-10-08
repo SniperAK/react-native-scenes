@@ -1,10 +1,6 @@
 {
   "name": "react-native-scenes",
-<<<<<<< HEAD
-  "version": "0.2.2",
-=======
   "version": "0.4.3",
->>>>>>> 55dbb76d4af2866b06fdd54f7127db5af1c86f70
   "description": "Standalone React native component scene stack control and support modal it. ",
   "main": "index.js",
   "scripts": {
