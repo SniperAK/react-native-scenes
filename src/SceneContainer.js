@@ -10,6 +10,7 @@ import {
   Easing,
   StatusBar,
   StyleSheet,
+  Dimensions,
   BackHandler,
 } from 'react-native';
 
@@ -40,13 +41,17 @@ const styles = StyleSheet.create({
     height:15,
     zIndex:1,
   },
-})
+});
+
+const CallRefNotExists = {CallRefNotExists:true};
 
 export default class SceneContainer extends Component {
   constructor( props ){
     super( props );
-    let {route} = props;
-
+    let {route, barShadow:barShadowGiven} = props;
+    let barShadow = typeof route.barShadow == 'boolean' ? route.barShadow : 
+                    typeof route.component.barShadow == 'boolean' ? route.component.barShadow : 
+                    barShadowGiven;
     this.state = {
       barStyle    : route.barStyle   || route.component.barStyle    || null,
       title       : route.title      || route.component.title       || null,
@@ -55,31 +60,59 @@ export default class SceneContainer extends Component {
       rightItem   : route.rightItem  || route.component.rightItem   || null,
       barOverlay  : null,
       barHidden   : route.barHidden  || route.component.barHidden   || false,
-      barShadow   : route.component.barShadow || props.barShadow,
+      barShadow,
     };
 
-    this._backAction = this._backAction.bind(this)
+    this._onReceiveBackPress = this._onReceiveBackPress.bind(this);
+    this._onChangeDimensions = this._onChangeDimensions.bind(this);
+  }
+
+  get route(){ 
+    return this.props.route; 
+  }
+
+  get index(){
+    return this.props.index;
+  }
+
+  get avoidBackHandler() { 
+    return typeof this.route.avoidBackHandler === 'boolean' ? this.route.avoidBackHandler :
+           typeof this.route.component.avoidBackHandler === 'boolean' ? this.route.component.avoidBackHandler : 
+           false;
+  }
+
+  _componentRefCall( action, ...params ){
+    if( this._componentRef && this._componentRef[action] && typeof this._componentRef[action] === 'function' ){
+      return this._componentRef[action]( ...params);
+    }
+    else return CallRefNotExists;
+    // if( !target ) console.warn( '_componentRefCall target not exists');
+    // else if( !target[action] ) console.warn(`_componentRefCall target.${action} not exists`);
+    // else if( typeof target[action] !== 'function' ) console.warn(`_componentRefCall target.${action} is not function`);
   }
 
   componentDidMount(){
     if( !this.avoidBackHandler && this.props.index > 0 ) {
-      this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', this._backAction );
-      console.log( this._backHandlerSubscription );
+      this._backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', this._onReceiveBackPress );
     }
+
+    let {dimensionsChangeEventEmitter:dimensionsEmitter} = this.props;
+    dimensionsEmitter && dimensionsEmitter.addEventListener && dimensionsEmitter.addEventListener('change', this._onChangeDimensions );
+    this._componentRefCall( 'routeWillAppear', this.props.index );
   }
 
   componentWillUnmount(){
     if( this._backHandlerSubscription ) this._backHandlerSubscription.remove();
-  }
-
-  _backAction(){
-    this.props.pop();
-    return true;
+    
+    let {dimensionsChangeEventEmitter:dimensionsEmitter} = this.props;
+    dimensionsEmitter && dimensionsEmitter.removeEventListener && dimensionsEmitter.removeEventListener('change', this._onChangeDimensions );
+    this._componentRefCall( 'routeDidDisappear', this.props.index );
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return (
-         nextState.barStyle   != this.state.barStyle    
+      this._shouldUpdate 
+      || nextState.barStyle   != this.state.barStyle    
       || nextState.title      != this.state.title       
       || nextState.titleStyle != this.state.titleStyle  
       || nextState.leftItem   != this.state.leftItem    
@@ -90,8 +123,42 @@ export default class SceneContainer extends Component {
     );
   }
 
-  get route(){ return this.props.route; }
-  get avoidBackHandler()  { return this.route.avoidBackHandler  || this.route.component.avoidBackHandler   || null  }
+  _onReceiveBackPress(){
+    let res = this._componentRefCall( 'onBackPress' );
+    if( res  === CallRefNotExists ) {
+      this.props.pop();
+      return true;
+    }
+    else return res;
+  }
+
+  _onChangeDimensions(event){
+    this._shouldUpdate = true;
+    this._componentRefCall( 'routeWillChangeDimensions', event );
+    this.setState({},()=>{
+      this._shouldUpdate = false;
+      this._componentRefCall( 'routeDidChangeDimensions', event );
+    })
+  }
+
+
+  routeWillChange( toIndex, currentIndex ) {
+    if( currentIndex == this.index && toIndex != this.index ) {
+      this._componentRefCall( 'routeWillDisappear', toIndex );
+    }
+    else if( (toIndex == this.index && currentIndex != this.index ) ) {
+      this._componentRefCall( 'routeWillAppear', toIndex );
+    }
+  }
+
+  routeDidChange( currentIndex, beforeIndex ) {
+    if( beforeIndex == this.index && currentIndex != this.index ) {
+      this._componentRefCall( 'routeDidDisappear', currentIndex )
+    }
+    if( currentIndex == this.index && beforeIndex != this.index ) {
+      this._componentRefCall( 'routeDidAppear', currentIndex )
+    }
+  }
   
   render(){
     let {
@@ -100,7 +167,7 @@ export default class SceneContainer extends Component {
     } = this.props;
 
     let {
-      component:Component,
+      component:Content,
       passProps
     } = route;
 
@@ -149,7 +216,8 @@ export default class SceneContainer extends Component {
           {!barHidden && barShadow && (
             <Image source={BarShadow} style={styles.barShadow} resizeMode='stretch' />
           )}
-          <Component 
+          <Content 
+            ref={r=>this._componentRef = r}
             sceneProps={sceneProps}
             {...sceneProps}
             {...passProps}

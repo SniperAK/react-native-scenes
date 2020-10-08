@@ -2,10 +2,14 @@
 
 > Pure Javascript to standalone scene statck control in React Native like react-navigation or navigator.
 
-> react-native-scenes makes dynamic routing each scehe.
+> react-native-scenes makes dynamic routing each scene.
 
 # Version History
-
+- 0.4.3 Bug Fix Scene Container does not relative global bar shadow option.
+- 0.4.2 Remove console.log when dimensions change event called
+- 0.4.1 Improve Dimension change event can customization
+- 0.4.0 Add Dimensions Change receive event implementable
+- 0.3.0 Add Route Change event props on each Component and Scenes owner
 - 0.2.0 Add BackHandler Event on Modal and SceneContainer
 - 0.1.5 Add setGlobalBarShadow(boolean) to control bar shadow appearence.
 
@@ -142,6 +146,9 @@ class Main extends React.Component {
   - default : BarButtonBack
 - animationDuration (default : 500)
 - style
+- routeWillChange( toIndex : Number )
+- routeDidChange( toIndex : Number )
+
 
 ### methods 
 - push
@@ -162,7 +169,7 @@ Modal.show()
 ```
 
 
-# BackHandler event ( v0.2.0 )
+## BackHandler event ( v0.2.0 )
 - The avoidBackHandler rounter options can determine BackHandler work or not work. But you should make sure implement BackHandler event as you want. See react-native BackHandler event sample [BackHandler](https://reactnative.dev/docs/backhandler)
 
 
@@ -192,4 +199,83 @@ class SomeScene extend Component{
     this._backHandlerSubscription.remove();
   }
 }
+```
+
+
+## Implement Route life cycle functions ( above v 0.3 )
+
+- routeWillAppear()
+  > after scene did mount and before the transition push or other component will push out with came current route
+- routeDidAppear()
+  > after transition with current route push over other scene or other comopnent did push out and re appear curent route
+- routeWillDisappear()
+  > before scene unmount or other scene route will show push over current scene with transition
+- routeDidDisappear()
+  > after scene unmount or other scene route did push over current scene after transition
+
+
+```
+class SomeScene extends Component {
+  componentDidMount(){
+  }
+
+  componentWillUnmount(){
+  }
+
+  routeWillAppear(){
+  }
+
+  routeDidAppear(){
+
+  }
+
+  routeWillDisappear(){
+
+  }
+
+  reouteDidDisappear(){
+
+  }
+
+  someActionToPushSomeRoute(){
+    this.props.push({
+      component:SomeOtherScene,
+    })
+  }
+}
+```
+
+## Implement Dimensions Change event
+> For improve performance should reduce render event called that each route are contained SceneContainer implements shouldCompnentUpdate funciton. So need to update navigation bar and scene update via dimension change event.
+
+- routeWillChangeDimensions
+- routeDidChangeDimensions
+
+### Dimensions Change Event Customization
+> Sometimes each Scene Container dimension change event need to delay call after other funcitons. ex) change global naviation bar style for related dimensions but Each scenes not effected
+
+```
+  this._scenesDimensionEventListeners = new Map();
+
+  // hack : Eacn Scenes`s router update delay after dimensions change event cause global Navigation bar style has chagne need first;
+
+  // replace DimensionsChange Event emitter ( default is Dimensions`s event management methods )
+  Scenes.DimensionsChangeEventEmitter = {
+    addEventListener:(event, listener)=>{
+      // makes delay 50 ms
+      let listenerWrapper = ()=>setTimeout(listener, 50);
+      // add event listener to linstener wrapper
+      Dimensions.addEventListener( 'change', listenerWrapper );
+      // store using Map to relative listener with listenerWrapper;
+      this._scenesDimensionEventListeners.set( listener, listenerWrapper );
+    },
+    removeEventListener:(event, listener)=>{
+      // find listenerWrapper via listener
+      let listenerWrapper = this._scenesDimensionEventListeners.get(listener);
+      // remove event listener via listenerWrapper
+      Dimensions.removeEventListener( 'change', listenerWrapper );
+      // remove stored relation listener
+      this._scenesDimensionEventListeners.delete( listener );
+    },
+  };
 ```

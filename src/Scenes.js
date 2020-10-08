@@ -9,6 +9,7 @@ import {
   Easing,
   Animated,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 
 import Modal from './Modal';
@@ -26,11 +27,17 @@ const styles = StyleSheet.create({
   container:{
     flex:1, 
     position:'relative',
+    overflow:'hidden',
   },
   routeContainerWrapper:{
     ...StyleSheet.absoluteFill,
   },
 });
+
+let _DimensionsChangeEventEmitter = {
+  addEventListener: Dimensions.addEventListener,
+  removeEventListener: Dimensions.removeEventListener,
+}
 
 export default class Scenes extends Component {
   static TransitionType = TransitionType;
@@ -40,6 +47,17 @@ export default class Scenes extends Component {
     animationDuration:AnimationDuration,
     style:{backgroundColor:'white'}
   }
+
+  static get DimensionsChangeEventEmitter(){
+    return _DimensionsChangeEventEmitter;
+  }
+
+  static set DimensionsChangeEventEmitter( emitter ){
+    _DimensionsChangeEventEmitter = emitter; 
+  }
+
+  static _scenesContainer = new Set();
+
   static _modalSeed = 0;
   static _modalIds = [];
   static _modals = [];
@@ -58,6 +76,17 @@ export default class Scenes extends Component {
     this._titleStyle = titleStyle; 
   }
 
+  static updateScenes(){
+    this._scenesContainer.forEach(scenes=>{
+      Object.values(scenes._routeRefs).forEach(routeRef=>{
+        routeRef._shouldUpdate = true;
+        routeRef.setState({},()=>{
+          routeRef._shouldUpdate = false;
+        });
+      })
+    })
+  }
+
   static showModal( options = {}){
     if( !global.Absolute ) return console.warn( 'Absolute module is not created yet or not implemented');
     if( !options.component ) return console.error( 'NaviagionController modal must provieded component to controll');
@@ -66,6 +95,7 @@ export default class Scenes extends Component {
       title,
       titleStyle,
       barHidden,
+      barShadow,
       barStyle,
       leftItem,
       rightItem,
@@ -86,6 +116,7 @@ export default class Scenes extends Component {
       title,
       titleStyle,
       barHidden,
+      barShadow,
       barStyle,
       rightItem,
       avoidBackHandler,
@@ -105,6 +136,7 @@ export default class Scenes extends Component {
           route,
           modalId,
           transitionType,
+          barShadow,
         }}
         avoidBackHandler={avoidBackHandler}
         Scenes={this}
@@ -140,7 +172,17 @@ export default class Scenes extends Component {
       transition: null,
     };
 
+    this._routeRefs = {};
+
     this._animation = new Animated.Value(1);
+  }
+  
+  componentDidMount(){
+    this.constructor._scenesContainer.add( this );
+  }
+
+  componentWillUnmount(){
+    this.constructor._scenesContainer.delete( this );
   }
 
   get animationDuration(){
@@ -171,6 +213,20 @@ export default class Scenes extends Component {
     ).start( r )); 
   }
 
+  _routeWillChange( toIndex, currentIndex ){
+    Object.values( this._routeRefs ).forEach(ref=>{
+      ref.routeWillChange( toIndex, currentIndex );
+    });
+    this.props.routeWillChange && this.props.routeWillChange( toIndex, currentIndex );
+  }
+
+  _routeDidChange( currentIndex, beforeIndex ){
+    Object.values( this._routeRefs ).forEach(ref=>{
+      ref.routeDidChange( currentIndex, beforeIndex );
+    });
+    this.props.routeDidChange && this.props.routeDidChange( currentIndex, beforeIndex );
+  }
+
   // route control 
   push = ( route )=>{
     if( this._nowTransition ) return Promise.resolve();
@@ -186,11 +242,13 @@ export default class Scenes extends Component {
         }
       };
     })
+    .then(()=>this._routeWillChange( this.state.routes.length - 1, this.state.routes.length - 2 ))
     .then(()=>this._animateTranstion())
     .then(()=>{
       this._nowTransition = false; 
       return this.setStateAsync({ transition: null })
     })
+    .then(()=>this._routeDidChange( this.state.routes.length - 1, this.state.routes.length - 2 ));
   }
 
   pop = ()=>{
@@ -208,6 +266,7 @@ export default class Scenes extends Component {
         }
       };
     })
+    .then(()=>this._routeWillChange(this.state.routes.length + 1, this.state.routes.length))
     .then(()=>this._animateTranstion())
     .then(()=>{
       return this.setStateAsync(({routes})=>{
@@ -219,11 +278,18 @@ export default class Scenes extends Component {
       })
     })
     .then(()=>this._nowTransition = false)
+    .then(()=>this._routeDidChange(this.state.routes.length, this.state.routes.length + 1));
   }
 
   popTo = ( index )=>{
+<<<<<<< HEAD
     if( this.state.routes.length == 1 ) return Promise.resolve({});
     if( index > this.state.routes.length - 2) return Promise.resolve({});
+=======
+    let currentIndex = this.state.routes.length - 1;
+    if( currentIndex ==  0) return {};
+    if( index > currentIndex - 1) return {};
+>>>>>>> 55dbb76d4af2866b06fdd54f7127db5af1c86f70
 
     if( this._nowTransition ) return Promise.resolve({});
     this._nowTransition = true; 
@@ -237,17 +303,19 @@ export default class Scenes extends Component {
         }
       };
     })
+    .then(()=>this._routeWillChange(index, currentIndex))
     .then(()=>this._animateTranstion())
     .then(()=>{
       return this.setStateAsync(({routes})=>{
-        routes.splice(  (index + 1), routes.length - (index + 1) );
+        routes.splice( (index + 1), routes.length - (index + 1) );
         return {
           routes,
           transition:null,
         };
       })
     })
-    .then(()=>this._nowTransition = false);
+    .then(()=>this._nowTransition = false)
+    .then(()=>this._routeDidChange(index, currentIndex));
   }
 
   popToTop = ()=>{
@@ -321,6 +389,10 @@ export default class Scenes extends Component {
     let _transform = this._calculateTransformForTranstion( index, routes );
     let { modalId, backButton } = this.props;
 
+    let barShadow = typeof this.props.barShadow == 'boolean' ? this.props.barShadow : 
+                    typeof this.constructor._barShadow == 'boolean' ? this.constructor._barShadow : 
+                    true; 
+                    
     let routing = {
       isRoot:index == 0,
       route,
@@ -333,8 +405,9 @@ export default class Scenes extends Component {
       popToTop:this.popToTop,
       hideModal:this.props.hideModal && this.hideModal,
       barStyle   : [this.constructor._barStyle,   this.props.barStyle  ].flat(),
-      barShadow  : this.constructor._barShadow || this.props.barShadow,
+      barShadow,
       titleStyle : [this.constructor._titleStyle, this.props.titleStyle].flat(),
+      dimensionsChangeEventEmitter:_DimensionsChangeEventEmitter,
     };
 
     return (
@@ -342,7 +415,14 @@ export default class Scenes extends Component {
         key={`navigation-route-${index}`}
         style={[styles.routeContainerWrapper, {zIndex:index}, _transform]} 
       >
-        <SceneContainer {...routing} routing={routing}/>
+        <SceneContainer 
+          {...routing} 
+          routing={routing}
+          ref={r=>{
+            if( r ) this._routeRefs[index]=r;
+            else delete this._routeRefs[index];
+          }}
+        />
       </Animated.View>
     )
   }
