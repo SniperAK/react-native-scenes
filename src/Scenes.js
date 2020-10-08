@@ -266,7 +266,7 @@ export default class Scenes extends Component {
         }
       };
     })
-    .then(()=>this._routeWillChange(this.state.routes.length + 1, this.state.routes.length))
+    .then(()=>this._routeWillChange(this.state.routes.length - 2, this.state.routes.length - 1))
     .then(()=>this._animateTranstion())
     .then(()=>{
       return this.setStateAsync(({routes})=>{
@@ -278,20 +278,15 @@ export default class Scenes extends Component {
       })
     })
     .then(()=>this._nowTransition = false)
-    .then(()=>this._routeDidChange(this.state.routes.length, this.state.routes.length + 1));
+    .then(()=>this._routeDidChange(this.state.routes.length - 1, this.state.routes.length));
   }
 
   popTo = ( index )=>{
-<<<<<<< HEAD
-    if( this.state.routes.length == 1 ) return Promise.resolve({});
-    if( index > this.state.routes.length - 2) return Promise.resolve({});
-=======
     let currentIndex = this.state.routes.length - 1;
-    if( currentIndex ==  0) return {};
-    if( index > currentIndex - 1) return {};
->>>>>>> 55dbb76d4af2866b06fdd54f7127db5af1c86f70
+    if( currentIndex == 0 ) return Promise.resolve();
+    if( index > currentIndex - 1) return Promise.resolve();
 
-    if( this._nowTransition ) return Promise.resolve({});
+    if( this._nowTransition ) return Promise.resolve();
     this._nowTransition = true; 
 
     return this.setStateAsync(({routes})=>{
