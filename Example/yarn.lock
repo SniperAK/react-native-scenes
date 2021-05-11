@@ -4263,9 +4263,9 @@ lodash.unescape@4.0.1:
   integrity sha1-vyJJiGzlFM2hEvrpIYzcBlIR/Jw=
 
 lodash@^4.17.10, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.5, lodash@^4.3.0:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 log-symbols@^2.2.0:
   version "2.2.0"
@@ -5427,6 +5427,21 @@ react-is@^16.12.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.9.0:
   version "16.13.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.0.tgz#0f37c3613c34fe6b37cd7f763a0d6293ab15c527"
   integrity sha512-GFMtL0vHkiBv9HluwNZTggSn/sCyEt9n02aM0dSAjGGyqyNlAyftYm4phPxdvCigG15JreC5biwxCgTAJZ7yAA==
+
+react-native-absolute@^1.0.2:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-absolute/-/react-native-absolute-1.1.0.tgz#29f25b9f67895249b928eccf8b5799769bce0502"
+  integrity sha512-Opr4lS00Srn4WB3tVuVLZ+9Qw40RusFs7qAO1ZBOqfyo8Rv3O0AZs/S/wAKkkni8zwJvZVLelAnt37iEk3r8mA==
+
+react-native-dev-treeview@^1.2.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-dev-treeview/-/react-native-dev-treeview-1.3.1.tgz#9f0cc410649cc654030df8a7ef6b07015b35be2f"
+  integrity sha512-Z4ipA8TGGVDM/PV/kqdWTPzbGQoq0isRjjHnBArxaTgeVwNBYMJF+qCt33cHpiNV78LNJyh4W1mFGE6odPMx5Q==
+
+react-native-scenes@^0.4.4:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/react-native-scenes/-/react-native-scenes-0.4.5.tgz#900040e69d22dae16e0546dbdc1c48286511ec76"
+  integrity sha512-mx0j4b/TNodVd4HoyNc4aPxfiW098MswBiQE3CjD7npiy99gIG9GAeqn6jjPhic7b3/p3pumRc6bEHFvt+JmOw==
 
 react-native@0.61.5:
   version "0.61.5"
