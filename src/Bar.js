@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 
 let {width,height} = Dimensions.get('window');
-GLOBAL.NotchDevice     = Platform.OS == 'ios' ? height == 812 || height == 896 || height == 828 : false;
-GLOBAL.StatusBarHeight = Platform.OS == 'ios' ? NotchDevice ? 35 : 20 : 0; // StatusBar.currentHeight;
-GLOBAL.BarHeight       = 56 + StatusBarHeight || 0;
+global.NotchDevice     = Platform.OS == 'ios' ? height == 812 || height == 896 || height == 828 : false;
+global.StatusBarHeight = Platform.OS == 'ios' ? NotchDevice ? 35 : 20 : 0; // StatusBar.currentHeight;
+global.BarHeight       = 56 + StatusBarHeight || 0;
 
 const styles = StyleSheet.create({
   bar: {

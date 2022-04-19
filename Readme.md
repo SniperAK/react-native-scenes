@@ -1,10 +1,10 @@
 # react-native-scenes
-
 > Pure Javascript to standalone scene statck control in React Native like react-navigation or navigator.
 
 > react-native-scenes makes dynamic routing each scene.
 
 # Version History
+- 0.4.5 Replace GLOBAL keyword.
 - 0.4.3 Bug Fix Scene Container does not relative global bar shadow option.
 - 0.4.2 Remove console.log when dimensions change event called
 - 0.4.1 Improve Dimension change event can customization
