@@ -2137,9 +2137,9 @@ decamelize@^1.1.1, decamelize@^1.2.0:
   integrity sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
 
 decode-uri-component@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
-  integrity sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.2.tgz#e69dbe25d37941171dd540e024c444cd5188e1e9"
+  integrity sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==
 
 deep-is@~0.1.3:
   version "0.1.3"
@@ -5427,6 +5427,21 @@ react-is@^16.12.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.9.0:
   version "16.13.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.0.tgz#0f37c3613c34fe6b37cd7f763a0d6293ab15c527"
   integrity sha512-GFMtL0vHkiBv9HluwNZTggSn/sCyEt9n02aM0dSAjGGyqyNlAyftYm4phPxdvCigG15JreC5biwxCgTAJZ7yAA==
+
+react-native-absolute@^1.0.2:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-absolute/-/react-native-absolute-1.1.0.tgz#29f25b9f67895249b928eccf8b5799769bce0502"
+  integrity sha512-Opr4lS00Srn4WB3tVuVLZ+9Qw40RusFs7qAO1ZBOqfyo8Rv3O0AZs/S/wAKkkni8zwJvZVLelAnt37iEk3r8mA==
+
+react-native-dev-treeview@^1.2.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-dev-treeview/-/react-native-dev-treeview-1.4.1.tgz#25bef5d70f3220683aa89370131bb5327810ad3c"
+  integrity sha512-cs0G/FPLs8g8Y4ivxoUP24kadQ4LfjCa06+tMvgmvo1QEZ8Dzyv6gm1SKikfrVE+rKcM23J0SFe+JqLjcaVdsQ==
+
+react-native-scenes@^0.4.4:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-scenes/-/react-native-scenes-0.4.6.tgz#d1ab305044205a18c35137886fd7647455e4cc1f"
+  integrity sha512-pFCjTelawAZPIerE/bOw+hL1+I7HJ/IIEOscIvNe41Tnx8EYJNHEYypid4nhpoNlkgU8kKiPbuUfXnp4QFFlQQ==
 
 react-native@0.61.5:
   version "0.61.5"
