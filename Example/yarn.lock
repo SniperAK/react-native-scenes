@@ -5406,9 +5406,9 @@ punycode@^2.1.0, punycode@^2.1.1:
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
 qs@~6.5.2:
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
-  integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.3.tgz#3aeeffc91967ef6e35c0e488ef46fb296ab76aad"
+  integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 range-parser@~1.2.1:
   version "1.2.1"
@@ -5427,6 +5427,21 @@ react-is@^16.12.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.9.0:
   version "16.13.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.0.tgz#0f37c3613c34fe6b37cd7f763a0d6293ab15c527"
   integrity sha512-GFMtL0vHkiBv9HluwNZTggSn/sCyEt9n02aM0dSAjGGyqyNlAyftYm4phPxdvCigG15JreC5biwxCgTAJZ7yAA==
+
+react-native-absolute@^1.0.2:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-absolute/-/react-native-absolute-1.1.0.tgz#29f25b9f67895249b928eccf8b5799769bce0502"
+  integrity sha512-Opr4lS00Srn4WB3tVuVLZ+9Qw40RusFs7qAO1ZBOqfyo8Rv3O0AZs/S/wAKkkni8zwJvZVLelAnt37iEk3r8mA==
+
+react-native-dev-treeview@^1.2.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-dev-treeview/-/react-native-dev-treeview-1.4.1.tgz#25bef5d70f3220683aa89370131bb5327810ad3c"
+  integrity sha512-cs0G/FPLs8g8Y4ivxoUP24kadQ4LfjCa06+tMvgmvo1QEZ8Dzyv6gm1SKikfrVE+rKcM23J0SFe+JqLjcaVdsQ==
+
+react-native-scenes@^0.4.4:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-scenes/-/react-native-scenes-0.4.6.tgz#d1ab305044205a18c35137886fd7647455e4cc1f"
+  integrity sha512-pFCjTelawAZPIerE/bOw+hL1+I7HJ/IIEOscIvNe41Tnx8EYJNHEYypid4nhpoNlkgU8kKiPbuUfXnp4QFFlQQ==
 
 react-native@0.61.5:
   version "0.61.5"
