@@ -4103,11 +4103,9 @@ json-stringify-safe@~5.0.1:
   integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
 
 json5@^2.1.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/json5/-/json5-2.1.1.tgz#81b6cb04e9ba496f1c7005d07b4368a2638f90b6"
-  integrity sha512-l+3HXD0GEI3huGq1njuqtzYK8OYJyXMkOLtQ53pjWh89tvWS2h6l+1zMkYWqlb57+SiQodKZyvMEFb2X+KrFhQ==
-  dependencies:
-    minimist "^1.2.0"
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
+  integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
 
 jsonfile@^2.1.0:
   version "2.4.0"
@@ -5427,6 +5425,21 @@ react-is@^16.12.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.9.0:
   version "16.13.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.0.tgz#0f37c3613c34fe6b37cd7f763a0d6293ab15c527"
   integrity sha512-GFMtL0vHkiBv9HluwNZTggSn/sCyEt9n02aM0dSAjGGyqyNlAyftYm4phPxdvCigG15JreC5biwxCgTAJZ7yAA==
+
+react-native-absolute@^1.0.2:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-absolute/-/react-native-absolute-1.1.0.tgz#29f25b9f67895249b928eccf8b5799769bce0502"
+  integrity sha512-Opr4lS00Srn4WB3tVuVLZ+9Qw40RusFs7qAO1ZBOqfyo8Rv3O0AZs/S/wAKkkni8zwJvZVLelAnt37iEk3r8mA==
+
+react-native-dev-treeview@^1.2.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-dev-treeview/-/react-native-dev-treeview-1.4.1.tgz#25bef5d70f3220683aa89370131bb5327810ad3c"
+  integrity sha512-cs0G/FPLs8g8Y4ivxoUP24kadQ4LfjCa06+tMvgmvo1QEZ8Dzyv6gm1SKikfrVE+rKcM23J0SFe+JqLjcaVdsQ==
+
+react-native-scenes@^0.4.4:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-scenes/-/react-native-scenes-0.4.6.tgz#d1ab305044205a18c35137886fd7647455e4cc1f"
+  integrity sha512-pFCjTelawAZPIerE/bOw+hL1+I7HJ/IIEOscIvNe41Tnx8EYJNHEYypid4nhpoNlkgU8kKiPbuUfXnp4QFFlQQ==
 
 react-native@0.61.5:
   version "0.61.5"
